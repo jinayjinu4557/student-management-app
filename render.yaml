@@ -19,8 +19,9 @@ services:
     name: student-management-frontend
     env: static
     plan: free
-    buildCommand: pwd && ls -la && cd frontend && pwd && ls -la && npm install && npm run build
-    staticPublishPath: frontend/build
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: build
     envVars:
       - key: REACT_APP_API_URL
         value: https://student-management-backend.onrender.com 
