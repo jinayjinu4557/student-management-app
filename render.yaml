@@ -4,7 +4,7 @@ services:
     name: student-management-backend
     env: node
     plan: free
-    buildCommand: cd backend && npm install
+    buildCommand: pwd && ls -la && cd backend && pwd && ls -la && npm install
     startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV
@@ -19,7 +19,7 @@ services:
     name: student-management-frontend
     env: static
     plan: free
-    buildCommand: cd frontend && npm install && npm run build
+    buildCommand: pwd && ls -la && cd frontend && pwd && ls -la && npm install && npm run build
     staticPublishPath: frontend/build
     envVars:
       - key: REACT_APP_API_URL
