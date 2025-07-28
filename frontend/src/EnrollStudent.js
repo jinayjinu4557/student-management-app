@@ -13,7 +13,7 @@ const EnrollStudent = ({ editStudent, onSave }) => {
     e.preventDefault();
     try {
       if (editStudent && editStudent._id) {
-        await axios.put(`/api/students/${editStudent._id}`, { ...form, monthlyFee: Number(form.monthlyFee) });
+        await api.put(`/api/students/${editStudent._id}`, { ...form, monthlyFee: Number(form.monthlyFee) });
         setMessage('Student updated successfully!');
         if (onSave) onSave();
       } else {

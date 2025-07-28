@@ -38,7 +38,7 @@ const StudentList = () => {
   };
 
   const handleEditSave = async (id) => {
-    await axios.put(`/api/students/${id}`, {
+    await api.put(`/api/students/${id}`, {
       ...editForm,
       monthlyFee: Number(editForm.monthlyFee)
     });
