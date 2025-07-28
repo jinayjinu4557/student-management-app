@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from './api';
 
 const Summary = () => {
   const [summary, setSummary] = useState({ totalEarnings: 0, totalPending: 0, studentStats: [] });
 
   const fetchSummary = () => {
-    axios.get('/api/summary').then(res => setSummary(res.data));
+    api.get('/api/summary').then(res => setSummary(res.data));
   };
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const Summary = () => {
   const handleDelete = async (studentId) => {
     console.log('Deleting studentId:', studentId);
     if (window.confirm('Are you sure you want to remove this student?')) {
-      await axios.delete(`/api/students/${studentId}`);
+      await api.delete(`/api/students/${studentId}`);
       fetchSummary();
     }
   };

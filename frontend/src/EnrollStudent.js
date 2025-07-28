@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from './api';
 
 const EnrollStudent = ({ editStudent, onSave }) => {
   const [form, setForm] = useState(editStudent || { name: '', parentNumber: '', class: '', monthlyFee: '' });
@@ -17,7 +17,7 @@ const EnrollStudent = ({ editStudent, onSave }) => {
         setMessage('Student updated successfully!');
         if (onSave) onSave();
       } else {
-        await axios.post('/api/students', { ...form, monthlyFee: Number(form.monthlyFee) });
+        await api.post('/api/students', { ...form, monthlyFee: Number(form.monthlyFee) });
         setMessage('Student enrolled successfully!');
         setForm({ name: '', parentNumber: '', class: '', monthlyFee: '' });
       }

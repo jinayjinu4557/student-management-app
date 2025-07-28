@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from './api';
 
 const months = [
   'June 2025', 'July 2025', 'August 2025', 'September 2025', 'October 2025',
@@ -17,15 +17,15 @@ const FeeStatus = () => {
   }, [selectedMonth]);
 
   const fetchData = async () => {
-    const studentsRes = await axios.get('/api/students');
-    const paymentsRes = await axios.get('/api/fees?month=' + encodeURIComponent(selectedMonth));
+    const studentsRes = await api.get('/api/students');
+    const paymentsRes = await api.get('/api/fees?month=' + encodeURIComponent(selectedMonth));
     setStudents(studentsRes.data);
     setPayments(paymentsRes.data);
   };
 
   const handleStatusChange = async (studentId, status) => {
     const student = students.find(s => s._id === studentId);
-    await axios.post('/api/fees', {
+    await api.post('/api/fees', {
       studentId,
       month: selectedMonth,
       status,

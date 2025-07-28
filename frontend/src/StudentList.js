@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from './api';
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -12,13 +12,13 @@ const StudentList = () => {
   }, []);
 
   const fetchStudents = async () => {
-    const res = await axios.get('/api/students');
+    const res = await api.get('/api/students');
     setStudents(res.data);
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to remove this student?')) {
-      await axios.delete(`/api/students/${id}`);
+      await api.delete(`/api/students/${id}`);
       fetchStudents();
     }
   };
