@@ -19,7 +19,7 @@ services:
     name: student-management-frontend
     env: static
     plan: free
-    buildCommand: chmod +x build-frontend.sh && ./build-frontend.sh
+    buildCommand: pwd && ls -la && cd frontend && pwd && ls -la && npm install && npm run build
     staticPublishPath: frontend/build
     envVars:
       - key: REACT_APP_API_URL
