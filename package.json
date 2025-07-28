@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Full-stack student management application",
   "engines": {
-    "node": "18.17.0"
+    "node": "20.11.0"
   },
   "scripts": {
     "build:backend": "cd backend && npm install",
