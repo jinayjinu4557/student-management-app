@@ -24,9 +24,12 @@ const Summary = () => {
     fetchSummary();
   }, []);
 
-  const handleDelete = async (studentId) => {
-    console.log('Deleting studentId:', studentId);
-    if (window.confirm('Are you sure you want to remove this student?')) {
+  const handleDelete = async (student) => {
+    console.log('Deleting student:', student);
+    const studentId = student._id || student.studentId || student.id;
+    console.log('Using studentId for deletion:', studentId);
+    
+    if (window.confirm(`Are you sure you want to remove ${student.name}?`)) {
       try {
         setLoading(true);
         setLoadingMessage('Removing student...');
@@ -34,6 +37,7 @@ const Summary = () => {
         await fetchSummary();
       } catch (error) {
         console.error('Error deleting student:', error);
+        alert('Failed to delete student. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -70,7 +74,7 @@ const Summary = () => {
                 <td>
                   <div className="action-buttons">
                     <button 
-                      onClick={() => handleDelete(stat.studentId)} 
+                      onClick={() => handleDelete(stat)} 
                       style={{ background: '#e53935', color: '#fff' }}>
                       Remove
                     </button>
