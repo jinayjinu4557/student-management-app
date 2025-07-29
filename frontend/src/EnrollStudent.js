@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import api from './api';
 import Loader from './components/Loader';
 
-const EnrollStudent = ({ editStudent, onSave }) => {
+const EnrollStudent = ({ editStudent, onSave, onSuccess }) => {
   const [form, setForm] = useState(editStudent || { name: '', parentNumber: '', class: '', monthlyFee: '' });
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,10 +19,16 @@ const EnrollStudent = ({ editStudent, onSave }) => {
         await api.put(`/api/students/${editStudent._id}`, { ...form, monthlyFee: Number(form.monthlyFee) });
         setMessage('Student updated successfully!');
         if (onSave) onSave();
+        if (onSuccess) {
+          setTimeout(() => onSuccess(), 1500); // Close modal after showing success message
+        }
       } else {
         await api.post('/api/students', { ...form, monthlyFee: Number(form.monthlyFee) });
         setMessage('Student enrolled successfully!');
         setForm({ name: '', parentNumber: '', class: '', monthlyFee: '' });
+        if (onSuccess) {
+          setTimeout(() => onSuccess(), 1500); // Close modal after showing success message
+        }
       }
     } catch (err) {
       setMessage('Error enrolling/updating student.');
