@@ -408,6 +408,9 @@ input[type="text"], input[type="number"], input[type="tel"], select {
   
   td:last-child {
     border-bottom: none;
+    display: block;
+    padding: 12px;
+    text-align: center;
   }
   
   td:before {
@@ -422,23 +425,27 @@ input[type="text"], input[type="number"], input[type="tel"], select {
     color: var(--primary-dark);
   }
   
-  /* Button container in tables */
-  td:last-child {
-    display: block;
-    padding: 12px;
+  /* Hide data-label for action buttons column */
+  td:last-child:before {
+    display: none;
   }
   
   .action-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     gap: 8px;
+    flex-wrap: wrap;
+    width: 100%;
   }
   
   .action-buttons button {
     flex: 1;
-    margin: 4px 0;
-    padding: 8px 12px;
+    margin: 4px 2px;
+    padding: 10px 16px;
     font-size: 0.9rem;
+    min-width: 80px;
+    border-radius: 8px;
+    font-weight: 600;
   }
   
   /* Responsive form */

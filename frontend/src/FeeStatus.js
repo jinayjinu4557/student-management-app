@@ -14,6 +14,8 @@ const FeeStatus = () => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
   useEffect(() => {
     fetchData();
@@ -65,6 +67,25 @@ const FeeStatus = () => {
     return payment && payment.status === 'Paid' ? 0 : students.find(s => s._id === studentId)?.monthlyFee || 0;
   };
 
+  // Calculate pagination
+  const totalPages = Math.ceil(students.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentStudents = students.slice(startIndex, endIndex);
+
+  const handlePreviousPage = () => {
+    setCurrentPage(prev => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  };
+
+  // Reset to first page when month changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedMonth]);
+
   return (
     <div className="container">
       {loading && <Loader message={loadingMessage} />}
@@ -89,7 +110,7 @@ const FeeStatus = () => {
             </tr>
           </thead>
           <tbody>
-            {students.map(student => (
+            {currentStudents.map(student => (
               <tr key={student._id}>
                 <td data-label="Name">{student.name}</td>
                 <td data-label="Class">{student.class}</td>
@@ -115,6 +136,62 @@ const FeeStatus = () => {
           </tbody>
         </table>
       </div>
+      
+      {/* Pagination Controls */}
+      {students.length > rowsPerPage && (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          marginTop: '20px', 
+          gap: '10px' 
+        }}>
+          <button 
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: currentPage === 1 ? '#ccc' : '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
+            }}
+          >
+            Previous
+          </button>
+          
+          <span style={{ margin: '0 15px', fontWeight: 'bold' }}>
+            Page {currentPage} of {totalPages}
+          </span>
+          
+          <button 
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: currentPage === totalPages ? '#ccc' : '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: currentPage === totalPages ? 'not-allowed' : 'pointer'
+            }}
+          >
+            Next
+          </button>
+        </div>
+      )}
+      
+      {/* Show total count */}
+      <div style={{ 
+        textAlign: 'center', 
+        marginTop: '10px', 
+        color: '#666', 
+        fontSize: '14px' 
+      }}>
+        Showing {startIndex + 1}-{Math.min(endIndex, students.length)} of {students.length} students
+      </div>
+      
       {message && <div className="success">{message}</div>}
     </div>
   );

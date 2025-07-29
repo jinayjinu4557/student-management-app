@@ -9,6 +9,8 @@ const StudentList = () => {
   const [editForm, setEditForm] = useState({ name: '', class: '', parentNumber: '', monthlyFee: '' });
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
 
   useEffect(() => {
     fetchStudents();
@@ -34,6 +36,11 @@ const StudentList = () => {
         setLoadingMessage('Removing student...');
         await api.delete(`/api/students/${id}`);
         await fetchStudents();
+        // Reset to first page if current page becomes empty
+        const totalPages = Math.ceil((filtered.length - 1) / rowsPerPage);
+        if (currentPage > totalPages && totalPages > 0) {
+          setCurrentPage(totalPages);
+        }
       } catch (error) {
         console.error('Error deleting student:', error);
       } finally {
@@ -79,6 +86,25 @@ const StudentList = () => {
     s.parentNumber.includes(filter)
   );
 
+  // Calculate pagination
+  const totalPages = Math.ceil(filtered.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentStudents = filtered.slice(startIndex, endIndex);
+
+  const handlePreviousPage = () => {
+    setCurrentPage(prev => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  };
+
+  // Reset to first page when filter changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
+
   return (
     <div className="container">
       {loading && <Loader message={loadingMessage} />}
@@ -101,7 +127,7 @@ const StudentList = () => {
           </tr>
         </thead>
         <tbody>
-          {filtered.map(student => (
+          {currentStudents.map(student => (
             <tr key={student.studentId}>
               {editId === student.studentId ? (
                 <>
@@ -144,6 +170,62 @@ const StudentList = () => {
           ))}
         </tbody>
       </table>
+      
+      {/* Pagination Controls */}
+      {filtered.length > rowsPerPage && (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          marginTop: '20px', 
+          gap: '10px' 
+        }}>
+          <button 
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: currentPage === 1 ? '#ccc' : '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
+            }}
+          >
+            Previous
+          </button>
+          
+          <span style={{ margin: '0 15px', fontWeight: 'bold' }}>
+            Page {currentPage} of {totalPages}
+          </span>
+          
+          <button 
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: currentPage === totalPages ? '#ccc' : '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: currentPage === totalPages ? 'not-allowed' : 'pointer'
+            }}
+          >
+            Next
+          </button>
+        </div>
+      )}
+      
+      {/* Show total count */}
+      <div style={{ 
+        textAlign: 'center', 
+        marginTop: '10px', 
+        color: '#666', 
+        fontSize: '14px' 
+      }}>
+        Showing {startIndex + 1}-{Math.min(endIndex, filtered.length)} of {filtered.length} students
+        {filter && ` (filtered from ${students.length} total)`}
+      </div>
     </div>
   );
 };
