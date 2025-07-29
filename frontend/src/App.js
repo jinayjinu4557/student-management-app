@@ -3,6 +3,8 @@ import EnrollStudent from './EnrollStudent';
 import FeeStatus from './FeeStatus';
 import Summary from './Summary';
 import StudentList from './StudentList';
+import { ThemeProvider } from './contexts/ThemeContext';
+import ThemeToggle from './components/ThemeToggle';
 import './App.css';
 
 function App() {
@@ -24,7 +26,7 @@ function App() {
   };
 
   return (
-    <>
+    <ThemeProvider>
       <div className="hero">
         <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80" alt="Students" className="hero-img" />
         <div className="hero-text">
@@ -61,9 +63,10 @@ function App() {
         >
           Student List
         </button>
+        <ThemeToggle />
       </nav>
       {renderActiveComponent()}
-    </>
+    </ThemeProvider>
   );
 }
 

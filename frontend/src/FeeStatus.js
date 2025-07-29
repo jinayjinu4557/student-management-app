@@ -139,56 +139,29 @@ const FeeStatus = () => {
       
       {/* Pagination Controls */}
       {students.length > rowsPerPage && (
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          marginTop: '20px', 
-          gap: '10px' 
-        }}>
+        <div className="pagination-controls">
           <button 
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: currentPage === 1 ? '#ccc' : '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
-            }}
           >
-            Previous
+            ← Previous
           </button>
           
-          <span style={{ margin: '0 15px', fontWeight: 'bold' }}>
+          <span className="pagination-info">
             Page {currentPage} of {totalPages}
           </span>
           
           <button 
             onClick={handleNextPage}
             disabled={currentPage === totalPages}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: currentPage === totalPages ? '#ccc' : '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: currentPage === totalPages ? 'not-allowed' : 'pointer'
-            }}
           >
-            Next
+            Next →
           </button>
         </div>
       )}
       
       {/* Show total count */}
-      <div style={{ 
-        textAlign: 'center', 
-        marginTop: '10px', 
-        color: '#666', 
-        fontSize: '14px' 
-      }}>
+      <div className="pagination-summary">
         Showing {startIndex + 1}-{Math.min(endIndex, students.length)} of {students.length} students
       </div>
       
