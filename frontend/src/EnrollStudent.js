@@ -27,38 +27,79 @@ const EnrollStudent = ({ editStudent, onSave }) => {
   };
 
   return (
-    <div className="container">
+    <div className="container enroll-container">
       <h2>{editStudent ? 'Edit Student' : 'Enroll Student'}</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="enroll-form">
         {editStudent && editStudent._id && (
-          <input value={editStudent._id} readOnly style={{ background: '#f0f0f0', color: '#888', marginBottom: 8 }} placeholder="Student ID" />
+          <div className="form-group full-width">
+            <label htmlFor="studentId">Student ID</label>
+            <input 
+              id="studentId"
+              value={editStudent._id} 
+              readOnly 
+              style={{ background: '#f9f9f9', color: '#777' }} 
+              placeholder="Student ID" 
+            />
+          </div>
         )}
         
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="name">Student Name</label>
-            <input id="name" name="name" value={form.name} onChange={handleChange} placeholder="Enter student name" required />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="class">Class/Grade</label>
-            <input id="class" name="class" value={form.class} onChange={handleChange} placeholder="Enter class/grade" required />
-          </div>
+        <div className="form-group">
+          <label htmlFor="name">Student Name</label>
+          <input 
+            id="name" 
+            name="name" 
+            type="text"
+            value={form.name} 
+            onChange={handleChange} 
+            placeholder="Enter student name" 
+            required 
+          />
         </div>
         
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="parentNumber">Parent Contact</label>
-            <input id="parentNumber" name="parentNumber" value={form.parentNumber} onChange={handleChange} placeholder="Enter phone number" required />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="monthlyFee">Monthly Fee</label>
-            <input id="monthlyFee" name="monthlyFee" value={form.monthlyFee} onChange={handleChange} placeholder="Enter amount" type="number" required />
-          </div>
+        <div className="form-group">
+          <label htmlFor="class">Class/Grade</label>
+          <input 
+            id="class" 
+            name="class" 
+            type="text"
+            value={form.class} 
+            onChange={handleChange} 
+            placeholder="Enter class/grade" 
+            required 
+          />
         </div>
         
-        <button type="submit">{editStudent ? 'Save Changes' : 'Enroll Student'}</button>
+        <div className="form-group">
+          <label htmlFor="parentNumber">Parent Contact</label>
+          <input 
+            id="parentNumber" 
+            name="parentNumber" 
+            type="tel"
+            value={form.parentNumber} 
+            onChange={handleChange} 
+            placeholder="Enter phone number" 
+            required 
+          />
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="monthlyFee">Monthly Fee (₹)</label>
+          <input 
+            id="monthlyFee" 
+            name="monthlyFee" 
+            value={form.monthlyFee} 
+            onChange={handleChange} 
+            placeholder="Enter amount" 
+            type="number" 
+            required 
+          />
+        </div>
+        
+        <div className="button-group">
+          <button type="submit" className="primary-button">
+            {editStudent ? 'Save Changes' : 'Enroll Student'}
+          </button>
+        </div>
       </form>
       {message && <div className="success">{message}</div>}
     </div>
