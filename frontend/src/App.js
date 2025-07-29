@@ -29,54 +29,51 @@ function App() {
       <div className="hero">
         <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80" alt="Students" className="hero-img" />
         
-        {/* Modern Navigation Overlay */}
-        <nav className="modern-nav">
-          <div className="nav-brand">
-            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="Logo" className="nav-logo-img" />
-            <span className="nav-brand-text">Deepika Tutions</span>
-          </div>
-          
-          <div className="nav-tabs">
-            <button 
-              onClick={() => setActiveTab('students')} 
-              className={`nav-tab ${activeTab === 'students' ? 'active' : ''}`}
-            >
-              Student List
-            </button>
-            <button 
-              onClick={() => setActiveTab('fees')} 
-              className={`nav-tab ${activeTab === 'fees' ? 'active' : ''}`}
-            >
-              Fee Status
-            </button>
-            <button 
-              onClick={() => setActiveTab('summary')} 
-              className={`nav-tab ${activeTab === 'summary' ? 'active' : ''}`}
-            >
-              Summary
-            </button>
-          </div>
-          
-        </nav>
-        
-        {/* Action Button - Reference Style */}
-        <div className="nav-actions">
-          <button 
-            onClick={() => setShowEnrollModal(true)} 
-            className="nav-action-btn"
-          >
-            New Student
-          </button>
-          <div className="floating-theme-toggle">
-            <ThemeToggle />
-          </div>
-        </div>
-        
-        <div className="hero-content">
+        <div className="hero-text">
           <h1>Welcome to Deepika Tutions</h1>
           <p>Empower your students. Simplify your tuition management. Enjoy a modern, friendly experience!</p>
         </div>
       </div>
+      
+      <nav className="main-nav">
+        <div className="nav-logo">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" alt="Logo" style={{ background: '#fff', border: '2px solid #2196f3', padding: 2 }} />
+          <span style={{ fontWeight: 700, fontSize: '1.25rem', letterSpacing: '1px' }}>Deepika Tutions</span>
+        </div>
+        
+        <div className="nav-center">
+          <button 
+            onClick={() => setActiveTab('students')} 
+            className={activeTab === 'students' ? 'active' : ''}
+          >
+            Student List
+          </button>
+          <button 
+            onClick={() => setActiveTab('fees')} 
+            className={activeTab === 'fees' ? 'active' : ''}
+          >
+            Fee Status
+          </button>
+          <button 
+            onClick={() => setActiveTab('summary')} 
+            className={activeTab === 'summary' ? 'active' : ''}
+          >
+            Summary
+          </button>
+        </div>
+        
+        <div className="nav-actions">
+          <button 
+            onClick={() => setShowEnrollModal(true)} 
+            className="new-student-btn"
+          >
+            <span className="plus-icon">+</span>
+            New Student
+          </button>
+          <ThemeToggle />
+        </div>
+      </nav>
+
       
       {/* Enroll Student Modal */}
       {showEnrollModal && (
