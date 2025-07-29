@@ -59,13 +59,12 @@ function App() {
           
         </nav>
         
-        {/* Separate Action Buttons */}
-        <div className="floating-actions">
+        {/* Action Button - Reference Style */}
+        <div className="nav-actions">
           <button 
             onClick={() => setShowEnrollModal(true)} 
-            className="floating-enroll-btn"
+            className="nav-action-btn"
           >
-            <span className="enroll-icon">+</span>
             New Student
           </button>
           <div className="floating-theme-toggle">
