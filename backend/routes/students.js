@@ -12,13 +12,15 @@ router.post('/', async (req, res) => {
       { $inc: { seq: 1 } },
       { new: true, upsert: true }
     );
-    const { name, parentNumber, class: studentClass, monthlyFee } = req.body;
+    const { name, parentNumber, class: studentClass, monthlyFee, enrollmentMonth, status } = req.body;
     const student = new Student({
       studentId: counter.seq,
       name,
       parentNumber,
       class: studentClass,
       monthlyFee,
+      enrollmentMonth: enrollmentMonth || 'June 2025',
+      status: status || 'Active',
       active: true
     });
     await student.save();
