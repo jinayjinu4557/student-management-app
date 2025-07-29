@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import api from './api';
 import Loader from './components/Loader';
 import './MobileResponsiveFix.css';
+import { useDataRefresh } from './contexts/DataRefreshContext';
 
 const Summary = () => {
   const [summary, setSummary] = useState({ totalEarnings: 0, totalPending: 0, studentStats: [] });
