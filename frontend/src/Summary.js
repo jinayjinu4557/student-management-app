@@ -37,6 +37,12 @@ const Summary = () => {
     fetchSummary();
   }, []);
 
+  const { refreshFlag } = useDataRefresh();
+
+  useEffect(() => {
+    fetchSummary();
+  }, [refreshFlag]);
+
   const handleDelete = async (student) => {
     console.log('=== DELETE OPERATION DEBUG ===');
     console.log('Full student object:', JSON.stringify(student, null, 2));

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import api from './api';
 import Loader from './components/Loader';
+import { useDataRefresh } from './contexts/DataRefreshContext';
 
 const months = [
   'June 2025', 'July 2025', 'August 2025', 'September 2025', 'October 2025',
@@ -18,6 +19,7 @@ const EnrollStudent = ({ editStudent, onSave, onSuccess }) => {
   });
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const { triggerRefresh } = useDataRefresh();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,6 +40,7 @@ const EnrollStudent = ({ editStudent, onSave, onSuccess }) => {
         await api.post('/api/students', { ...form, monthlyFee: Number(form.monthlyFee) });
         setMessage('Student enrolled successfully!');
         setForm({ name: '', parentNumber: '', class: '', monthlyFee: '' });
+        triggerRefresh(); // Trigger refresh for other components
         if (onSuccess) {
           setTimeout(() => onSuccess(), 1500); // Close modal after showing success message
         }
@@ -161,4 +164,4 @@ const EnrollStudent = ({ editStudent, onSave, onSuccess }) => {
   );
 };
 
-export default EnrollStudent; 
+export default EnrollStudent;
