@@ -112,20 +112,50 @@ const Summary = () => {
         <table>
           <thead>
             <tr>
-              {/* <th>Student ID</th> */}
-              <th>Student</th>
-              <th>Paid</th>
-              <th>Pending</th>
+              <th>Student Name</th>
+              <th>Class</th>
+              <th>Status</th>
+              <th>Enrollment Month</th>
+              <th>Fee Type</th>
+              <th>Applicable Months</th>
+              <th>Amount Paid</th>
+              <th>Amount Pending</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {currentStudents.map((stat, index) => (
               <tr key={stat.studentId || stat._id || index}>
-                {/* <td>{stat.studentId}</td> */}
-                <td data-label="Student">{stat.name}</td>
-                <td data-label="Paid">₹{stat.paid}</td>
-                <td data-label="Pending">₹{stat.pending}</td>
+                <td data-label="Student Name">{stat.name}</td>
+                <td data-label="Class">{stat.class}</td>
+                <td data-label="Status">
+                  <span className={`status-badge ${stat.status?.toLowerCase()}`}>
+                    {stat.status || 'Active'}
+                  </span>
+                </td>
+                <td data-label="Enrollment Month">
+                  <span className="enrollment-month">
+                    {stat.enrollmentMonth || 'June 2025'}
+                  </span>
+                </td>
+                <td data-label="Fee Type">
+                  <span className={`fee-type-badge ${stat.isClass10 ? 'part-payment' : 'monthly'}`}>
+                    {stat.isClass10 ? 'Part Payment' : 'Monthly'}
+                  </span>
+                </td>
+                <td data-label="Applicable Months">
+                  <span className="applicable-months">
+                    {stat.applicableMonths} months
+                    {stat.applicableMonths < 11 && stat.status === 'Active' && (
+                      <span className="prorated-indicator"> (Prorated)</span>
+                    )}
+                    {stat.status === 'Left' && (
+                      <span className="left-indicator"> (Until Left)</span>
+                    )}
+                  </span>
+                </td>
+                <td data-label="Amount Paid">₹{stat.paid}</td>
+                <td data-label="Amount Pending">₹{stat.pending}</td>
                 <td>
                   <div className="action-buttons">
                     <button 

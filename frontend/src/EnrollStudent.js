@@ -2,8 +2,20 @@ import React, { useState } from 'react';
 import api from './api';
 import Loader from './components/Loader';
 
+const months = [
+  'June 2025', 'July 2025', 'August 2025', 'September 2025', 'October 2025',
+  'November 2025', 'December 2025', 'January 2026', 'February 2026', 'March 2026', 'April 2026'
+];
+
 const EnrollStudent = ({ editStudent, onSave, onSuccess }) => {
-  const [form, setForm] = useState(editStudent || { name: '', parentNumber: '', class: '', monthlyFee: '' });
+  const [form, setForm] = useState(editStudent || { 
+    name: '', 
+    parentNumber: '', 
+    class: '', 
+    monthlyFee: '', 
+    enrollmentMonth: 'June 2025',
+    status: 'Active'
+  });
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -105,6 +117,37 @@ const EnrollStudent = ({ editStudent, onSave, onSuccess }) => {
             type="number" 
             required 
           />
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="enrollmentMonth">Enrollment Month</label>
+          <select 
+            id="enrollmentMonth" 
+            name="enrollmentMonth" 
+            value={form.enrollmentMonth} 
+            onChange={handleChange}
+            required
+          >
+            {months.map(month => (
+              <option key={month} value={month}>{month}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="status">Student Status</label>
+          <select 
+            id="status" 
+            name="status" 
+            value={form.status} 
+            onChange={handleChange}
+            required
+          >
+            <option value="Active">Active</option>
+            <option value="Left">Left</option>
+            <option value="Void">Void</option>
+            <option value="Abandon">Abandon</option>
+          </select>
         </div>
         
         <div className="button-group">
