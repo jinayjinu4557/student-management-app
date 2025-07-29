@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from './api';
 import Loader from './components/Loader';
+import { useDataRefresh } from './contexts/DataRefreshContext';
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -12,9 +13,11 @@ const StudentList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
+  const { refreshFlag } = useDataRefresh();
+
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [refreshFlag]);
 
   const fetchStudents = async () => {
     try {
