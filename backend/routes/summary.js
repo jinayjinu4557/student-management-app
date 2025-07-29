@@ -11,7 +11,8 @@ const academicYearMonths = [
 // Get earnings and pending summary for the academic year
 router.get('/', async (req, res) => {
   try {
-    const students = await Student.find();
+    // Only get active students to match the delete API behavior
+    const students = await Student.find({ active: { $ne: false } });
     const payments = await FeePayment.find();
     let totalEarnings = 0;
     let totalPending = 0;
@@ -29,7 +30,8 @@ router.get('/', async (req, res) => {
       totalEarnings += paid;
       totalPending += pending;
       return {
-        studentId: student._id,
+        studentId: student.studentId, // Use the numeric studentId, not MongoDB _id
+        _id: student._id, // Keep _id for reference if needed
         name: student.name,
         paid,
         pending

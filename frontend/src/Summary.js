@@ -37,71 +37,28 @@ const Summary = () => {
   }, []);
 
   const handleDelete = async (student) => {
-    console.log('=== DELETE OPERATION DEBUG ===');
-    console.log('Full student object received:', JSON.stringify(student, null, 2));
-    console.log('Object keys:', Object.keys(student));
+    console.log('=== DELETE OPERATION ===');
+    console.log('Student object:', student);
+    console.log('Student ID:', student.studentId);
     console.log('Student name:', student.name);
     
-    // More comprehensive ID extraction logic
-    let studentId = null;
-    
-    // Try all possible ID field variations
-    if (student.studentId) {
-      studentId = student.studentId;
-      console.log('Found studentId field:', studentId);
-    } else if (student._id) {
-      studentId = student._id;
-      console.log('Found _id field:', studentId);
-    } else if (student.id) {
-      studentId = student.id;
-      console.log('Found id field:', studentId);
-    } else {
-      // If no direct ID, try to find it in nested objects or other patterns
-      console.log('No direct ID found, checking for alternative patterns...');
-      
-      // Check if there's a student object nested inside
-      if (student.student && (student.student._id || student.student.id)) {
-        studentId = student.student._id || student.student.id;
-        console.log('Found nested student ID:', studentId);
-      }
-    }
-    
-    console.log('Final studentId to use:', studentId);
-    console.log('StudentId type:', typeof studentId);
+    // Backend now provides the correct numeric studentId
+    const studentId = student.studentId;
     
     if (!studentId) {
-      console.error('=== NO VALID ID FOUND ===');
-      console.error('Student object structure:', student);
-      alert(`Cannot delete student: No valid ID found.\n\nDebug info:\nAvailable keys: ${Object.keys(student).join(', ')}\nStudent object: ${JSON.stringify(student, null, 2)}`);
+      console.error('No studentId found in student object:', student);
+      alert('Cannot delete student: No valid student ID found.');
       return;
     }
     
-    if (window.confirm(`Are you sure you want to remove ${student.name}?\n\nStudent ID: ${studentId}`)) {
+    if (window.confirm(`Are you sure you want to remove ${student.name}?`)) {
       try {
         setLoading(true);
         setLoadingMessage('Removing student...');
         
-        console.log('=== MAKING DELETE REQUEST ===');
-        console.log('DELETE URL:', `/api/students/${studentId}`);
-        console.log('Student ID being sent:', studentId);
-        
-        // First, let's try to get the student details to verify the ID exists
-        try {
-          const checkResponse = await api.get(`/api/students/${studentId}`);
-          console.log('Student exists, proceeding with delete:', checkResponse.data);
-        } catch (checkError) {
-          console.error('Student verification failed:', checkError.response?.data);
-          if (checkError.response?.status === 404) {
-            alert('Student not found. The student may have already been deleted.');
-            await fetchSummary(); // Refresh the data
-            return;
-          }
-        }
-        
-        // Proceed with delete
+        console.log('Making DELETE request to:', `/api/students/${studentId}`);
         const response = await api.delete(`/api/students/${studentId}`);
-        console.log('=== DELETE SUCCESS ===');
-        console.log('Delete response:', response.data);
+        console.log('Delete successful:', response.data);
         
         alert('Student deleted successfully!');
         await fetchSummary();
@@ -113,41 +70,18 @@ const Summary = () => {
         }
         
       } catch (error) {
-        console.error('=== DELETE ERROR ===');
-        console.error('Error object:', error);
-        console.error('Error response:', error.response);
-        console.error('Error status:', error.response?.status);
-        console.error('Error data:', error.response?.data);
-        console.error('Error message:', error.message);
+        console.error('Delete error:', error);
         
-        let errorMessage = 'Unknown error occurred';
-        
-        if (error.response) {
-          // Server responded with error status
-          const status = error.response.status;
-          const data = error.response.data;
-          
-          switch (status) {
-            case 400:
-              errorMessage = `Bad Request: ${data?.message || 'Invalid student ID format'}`;
-              break;
-            case 404:
-              errorMessage = 'Student not found. May have already been deleted.';
-              break;
-            case 500:
-              errorMessage = 'Server error. Please try again later.';
-              break;
-            default:
-              errorMessage = `Error ${status}: ${data?.message || error.message}`;
-          }
-        } else if (error.request) {
-          // Network error
-          errorMessage = 'Network error. Please check your connection.';
-        } else {
-          errorMessage = error.message;
+        let errorMessage = 'Failed to delete student';
+        if (error.response?.data?.error) {
+          errorMessage = error.response.data.error;
+        } else if (error.response?.status === 404) {
+          errorMessage = 'Student not found';
+        } else if (error.response?.status === 400) {
+          errorMessage = 'Invalid student ID';
         }
         
-        alert(`Failed to delete student: ${errorMessage}\n\nDebug info:\nStudent ID used: ${studentId}\nURL: /api/students/${studentId}`);
+        alert(errorMessage);
       } finally {
         setLoading(false);
       }
