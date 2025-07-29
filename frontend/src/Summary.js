@@ -14,11 +14,19 @@ const Summary = () => {
       setLoading(true);
       setLoadingMessage('Loading summary data...');
       const res = await api.get('/api/summary');
-      console.log('Summary data received:', res.data);
-      console.log('Student stats structure:', res.data.studentStats);
+      console.log('Summary API Response:', res.data);
+      console.log('Student stats array:', res.data.studentStats);
+      
+      // Debug each student object structure
+      if (res.data.studentStats && res.data.studentStats.length > 0) {
+        console.log('First student object structure:', res.data.studentStats[0]);
+        console.log('Available keys in first student:', Object.keys(res.data.studentStats[0]));
+      }
+      
       setSummary(res.data);
     } catch (error) {
       console.error('Error fetching summary:', error);
+      alert('Failed to load summary data. Please refresh the page.');
     } finally {
       setLoading(false);
     }
@@ -29,36 +37,117 @@ const Summary = () => {
   }, []);
 
   const handleDelete = async (student) => {
-    console.log('Full student object:', student);
-    console.log('Available keys:', Object.keys(student));
+    console.log('=== DELETE OPERATION DEBUG ===');
+    console.log('Full student object received:', JSON.stringify(student, null, 2));
+    console.log('Object keys:', Object.keys(student));
+    console.log('Student name:', student.name);
     
-    // Try different possible ID fields from the student object
-    const studentId = student.studentId || student._id || student.id;
-    console.log('Using studentId:', studentId);
+    // More comprehensive ID extraction logic
+    let studentId = null;
+    
+    // Try all possible ID field variations
+    if (student.studentId) {
+      studentId = student.studentId;
+      console.log('Found studentId field:', studentId);
+    } else if (student._id) {
+      studentId = student._id;
+      console.log('Found _id field:', studentId);
+    } else if (student.id) {
+      studentId = student.id;
+      console.log('Found id field:', studentId);
+    } else {
+      // If no direct ID, try to find it in nested objects or other patterns
+      console.log('No direct ID found, checking for alternative patterns...');
+      
+      // Check if there's a student object nested inside
+      if (student.student && (student.student._id || student.student.id)) {
+        studentId = student.student._id || student.student.id;
+        console.log('Found nested student ID:', studentId);
+      }
+    }
+    
+    console.log('Final studentId to use:', studentId);
+    console.log('StudentId type:', typeof studentId);
     
     if (!studentId) {
-      console.error('No valid ID found in student data:', student);
-      alert('Cannot delete student: Invalid student ID');
+      console.error('=== NO VALID ID FOUND ===');
+      console.error('Student object structure:', student);
+      alert(`Cannot delete student: No valid ID found.\n\nDebug info:\nAvailable keys: ${Object.keys(student).join(', ')}\nStudent object: ${JSON.stringify(student, null, 2)}`);
       return;
     }
     
-    if (window.confirm(`Are you sure you want to remove ${student.name}?`)) {
+    if (window.confirm(`Are you sure you want to remove ${student.name}?\n\nStudent ID: ${studentId}`)) {
       try {
         setLoading(true);
         setLoadingMessage('Removing student...');
-        console.log('Making DELETE request to:', `/api/students/${studentId}`);
+        
+        console.log('=== MAKING DELETE REQUEST ===');
+        console.log('DELETE URL:', `/api/students/${studentId}`);
+        console.log('Student ID being sent:', studentId);
+        
+        // First, let's try to get the student details to verify the ID exists
+        try {
+          const checkResponse = await api.get(`/api/students/${studentId}`);
+          console.log('Student exists, proceeding with delete:', checkResponse.data);
+        } catch (checkError) {
+          console.error('Student verification failed:', checkError.response?.data);
+          if (checkError.response?.status === 404) {
+            alert('Student not found. The student may have already been deleted.');
+            await fetchSummary(); // Refresh the data
+            return;
+          }
+        }
+        
+        // Proceed with delete
         const response = await api.delete(`/api/students/${studentId}`);
-        console.log('Delete response:', response);
+        console.log('=== DELETE SUCCESS ===');
+        console.log('Delete response:', response.data);
+        
+        alert('Student deleted successfully!');
         await fetchSummary();
+        
         // Reset to first page if current page becomes empty
         const totalPages = Math.ceil((summary.studentStats.length - 1) / rowsPerPage);
         if (currentPage > totalPages && totalPages > 0) {
           setCurrentPage(totalPages);
         }
+        
       } catch (error) {
-        console.error('Error deleting student:', error);
-        console.error('Error details:', error.response?.data);
-        alert(`Failed to delete student: ${error.response?.data?.message || error.message}`);
+        console.error('=== DELETE ERROR ===');
+        console.error('Error object:', error);
+        console.error('Error response:', error.response);
+        console.error('Error status:', error.response?.status);
+        console.error('Error data:', error.response?.data);
+        console.error('Error message:', error.message);
+        
+        let errorMessage = 'Unknown error occurred';
+        
+        if (error.response) {
+          // Server responded with error status
+          const status = error.response.status;
+          const data = error.response.data;
+          
+          switch (status) {
+            case 400:
+              errorMessage = `Bad Request: ${data?.message || 'Invalid student ID format'}`;
+              break;
+            case 404:
+              errorMessage = 'Student not found. May have already been deleted.';
+              break;
+            case 500:
+              errorMessage = 'Server error. Please try again later.';
+              break;
+            default:
+              errorMessage = `Error ${status}: ${data?.message || error.message}`;
+          }
+        } else if (error.request) {
+          // Network error
+          errorMessage = 'Network error. Please check your connection.';
+        } else {
+          errorMessage = error.message;
+        }
+        
+        alert(`Failed to delete student: ${errorMessage}\n\nDebug info:\nStudent ID used: ${studentId}\nURL: /api/students/${studentId}`);
       } finally {
         setLoading(false);
       }
