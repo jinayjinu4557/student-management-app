@@ -50,7 +50,7 @@ const isClass10Student = (studentClass) => {
 router.get('/', async (req, res) => {
   try {
     // Fetch all students but we'll handle status in calculation
-    const students = await Student.find({});
+    const students = await Student.find({ active: { $ne: false } });
     const payments = await FeePayment.find();
     let totalEarnings = 0;
     let totalPending = 0;
