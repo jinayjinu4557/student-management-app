@@ -28,30 +28,38 @@ const Summary = () => {
       <h2>Academic Year Summary (June 2025 – April 2026)</h2>
       <div style={{ marginBottom: 8 }}>Total Earnings: <span style={{ fontWeight: 'bold' }}>₹{summary.totalEarnings}</span></div>
       <div style={{ marginBottom: 16 }}>Total Pending: <span style={{ fontWeight: 'bold' }}>₹{summary.totalPending}</span></div>
-      <table>
-        <thead>
-          <tr>
-            {/* <th>Student ID</th> */}
-            <th>Student</th>
-            <th>Paid</th>
-            <th>Pending</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {summary.studentStats.map(stat => (
-            <tr key={stat.studentId}>
-              {/* <td>{stat.studentId}</td> */}
-              <td>{stat.name}</td>
-              <td>₹{stat.paid}</td>
-              <td>₹{stat.pending}</td>
-              <td>
-                <button onClick={() => handleDelete(stat.studentId)} style={{ background: '#e53935', color: '#fff', borderRadius: 6, padding: '4px 12px', border: 'none' }}>Remove</button>
-              </td>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              {/* <th>Student ID</th> */}
+              <th>Student</th>
+              <th>Paid</th>
+              <th>Pending</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {summary.studentStats.map(stat => (
+              <tr key={stat.studentId}>
+                {/* <td>{stat.studentId}</td> */}
+                <td data-label="Student">{stat.name}</td>
+                <td data-label="Paid">₹{stat.paid}</td>
+                <td data-label="Pending">₹{stat.pending}</td>
+                <td>
+                  <div className="action-buttons">
+                    <button 
+                      onClick={() => handleDelete(stat.studentId)} 
+                      style={{ background: '#e53935', color: '#fff' }}>
+                      Remove
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

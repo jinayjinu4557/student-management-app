@@ -78,25 +78,37 @@ const StudentList = () => {
               {editId === student.studentId ? (
                 <>
                   {/* <td>{student.studentId}</td> */}
-                  <td><input name="name" value={editForm.name} onChange={handleEditChange} /></td>
-                  <td><input name="class" value={editForm.class} onChange={handleEditChange} /></td>
-                  <td><input name="monthlyFee" value={editForm.monthlyFee} onChange={handleEditChange} type="number" /></td>
-                  <td><input name="parentNumber" value={editForm.parentNumber} onChange={handleEditChange} /></td>
+                  <td data-label="Name">
+                    <input name="name" value={editForm.name} onChange={handleEditChange} />
+                  </td>
+                  <td data-label="Class">
+                    <input name="class" value={editForm.class} onChange={handleEditChange} />
+                  </td>
+                  <td data-label="Monthly Fee">
+                    <input name="monthlyFee" value={editForm.monthlyFee} onChange={handleEditChange} type="number" />
+                  </td>
+                  <td data-label="Parent Contact">
+                    <input name="parentNumber" value={editForm.parentNumber} onChange={handleEditChange} />
+                  </td>
                   <td>
-                    <button onClick={() => handleEditSave(student.studentId)} style={{ background: '#2196f3', color: '#fff', marginRight: 8 }}>Save</button>
-                    <button onClick={() => setEditId(null)} style={{ background: '#e0e0e0', color: '#333' }}>Cancel</button>
+                    <div className="action-buttons">
+                      <button onClick={() => handleEditSave(student.studentId)} style={{ background: '#2196f3', color: '#fff' }}>Save</button>
+                      <button onClick={() => setEditId(null)} style={{ background: '#e0e0e0', color: '#333' }}>Cancel</button>
+                    </div>
                   </td>
                 </>
               ) : (
                 <>
                   {/* <td>{student.studentId}</td> */}
-                  <td>{student.name}</td>
-                  <td>{student.class}</td>
-                  <td>{student.monthlyFee}</td>
-                  <td>{student.parentNumber}</td>
+                  <td data-label="Name">{student.name}</td>
+                  <td data-label="Class">{student.class}</td>
+                  <td data-label="Monthly Fee">{student.monthlyFee}</td>
+                  <td data-label="Parent Contact">{student.parentNumber}</td>
                   <td>
-                    <button onClick={() => handleEdit(student)} style={{ background: '#00bcd4', color: '#fff', marginRight: 8 }}>Edit</button>
-                    <button onClick={() => handleDelete(student.studentId)} style={{ background: '#e53935', color: '#fff' }}>Remove</button>
+                    <div className="action-buttons">
+                      <button onClick={() => handleEdit(student)} style={{ background: '#00bcd4', color: '#fff' }}>Edit</button>
+                      <button onClick={() => handleDelete(student.studentId)} style={{ background: '#e53935', color: '#fff' }}>Remove</button>
+                    </div>
                   </td>
                 </>
               )}

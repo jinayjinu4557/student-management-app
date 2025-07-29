@@ -55,33 +55,45 @@ const FeeStatus = () => {
           ))}
         </select>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Class</th>
-            <th>Fee</th>
-            <th>Status</th>
-            <th>Balance</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.map(student => (
-            <tr key={student._id}>
-              <td>{student.name}</td>
-              <td>{student.class}</td>
-              <td>{student.monthlyFee}</td>
-              <td>{getStatus(student._id)}</td>
-              <td>{getBalance(student._id)}</td>
-              <td>
-                <button onClick={() => handleStatusChange(student._id, 'Paid')} style={{ background: 'green', color: '#fff', padding: '4px 8px', borderRadius: 4, border: 'none', marginRight: 8 }}>Mark Paid</button>
-                <button onClick={() => handleStatusChange(student._id, 'Unpaid')} style={{ background: 'red', color: '#fff', padding: '4px 8px', borderRadius: 4, border: 'none' }}>Mark Unpaid</button>
-              </td>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Class</th>
+              <th>Fee</th>
+              <th>Status</th>
+              <th>Balance</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {students.map(student => (
+              <tr key={student._id}>
+                <td data-label="Name">{student.name}</td>
+                <td data-label="Class">{student.class}</td>
+                <td data-label="Fee">{student.monthlyFee}</td>
+                <td data-label="Status">{getStatus(student._id)}</td>
+                <td data-label="Balance">{getBalance(student._id)}</td>
+                <td>
+                  <div className="action-buttons">
+                    <button 
+                      onClick={() => handleStatusChange(student._id, 'Paid')} 
+                      style={{ background: 'green', color: '#fff' }}>
+                      Mark Paid
+                    </button>
+                    <button 
+                      onClick={() => handleStatusChange(student._id, 'Unpaid')} 
+                      style={{ background: 'red', color: '#fff' }}>
+                      Mark Unpaid
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {message && <div className="success">{message}</div>}
     </div>
   );

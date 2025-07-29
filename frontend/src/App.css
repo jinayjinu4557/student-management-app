@@ -284,6 +284,13 @@ button:hover {
   margin-top: 1rem;
 }
 
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 1rem;
+  -webkit-overflow-scrolling: touch;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -315,18 +322,160 @@ input[type="text"], input[type="number"], select {
   box-sizing: border-box;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .container {
-    padding: 10px;
+    padding: 12px;
     max-width: 98vw;
+    margin: 1rem auto;
   }
+  
+  h2 {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+  
+  .hero {
+    height: 180px;
+  }
+  
+  .hero-text h1 {
+    font-size: 1.8rem;
+  }
+  
+  .hero-text p {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+  
+  .card {
+    padding: 16px;
+  }
+  
+  button {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+  }
+  
+  /* Table responsiveness */
   table, thead, tbody, th, td, tr {
     display: block;
     width: 100%;
   }
-  th, td {
-    box-sizing: border-box;
+  
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  
+  tr {
+    margin-bottom: 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    background: #fff !important;
+  }
+  
+  td {
+    position: relative;
+    padding-left: 40%;
     width: 100%;
+    box-sizing: border-box;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  td:last-child {
+    border-bottom: none;
+  }
+  
+  td:before {
+    content: attr(data-label);
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 35%;
+    padding-right: 10px;
+    text-align: left;
+    font-weight: bold;
+    color: var(--primary-dark);
+  }
+  
+  /* Button container in tables */
+  td:last-child {
     display: block;
+    padding: 12px;
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  
+  .action-buttons button {
+    flex: 1;
+    margin: 4px 0;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  
+  /* Responsive form */
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .form-group {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+}
+
+/* Small phone screens */
+@media (max-width: 480px) {
+  .hero {
+    height: 160px;
+  }
+  
+  .hero-text h1 {
+    font-size: 1.5rem;
+  }
+  
+  nav {
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    margin: -28px auto 20px auto;
+  }
+  
+  .nav-logo {
+    margin-right: 0;
+    margin-bottom: 8px;
+    padding: 6px;
+    font-size: 1rem;
+    width: 80%;
+    justify-content: center;
+  }
+  
+  nav a {
+    padding: 8px;
+    font-size: 0.9rem;
+    width: 80%;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  
+  input, select, button {
+    font-size: 1rem;
+    padding: 10px;
   }
 }

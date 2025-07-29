@@ -33,10 +33,31 @@ const EnrollStudent = ({ editStudent, onSave }) => {
         {editStudent && editStudent._id && (
           <input value={editStudent._id} readOnly style={{ background: '#f0f0f0', color: '#888', marginBottom: 8 }} placeholder="Student ID" />
         )}
-        <input name="name" value={form.name} onChange={handleChange} placeholder="Name" required />
-        <input name="parentNumber" value={form.parentNumber} onChange={handleChange} placeholder="Parent Contact Number" required />
-        <input name="class" value={form.class} onChange={handleChange} placeholder="Class" required />
-        <input name="monthlyFee" value={form.monthlyFee} onChange={handleChange} placeholder="Monthly Fee" type="number" required />
+        
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="name">Student Name</label>
+            <input id="name" name="name" value={form.name} onChange={handleChange} placeholder="Enter student name" required />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="class">Class/Grade</label>
+            <input id="class" name="class" value={form.class} onChange={handleChange} placeholder="Enter class/grade" required />
+          </div>
+        </div>
+        
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="parentNumber">Parent Contact</label>
+            <input id="parentNumber" name="parentNumber" value={form.parentNumber} onChange={handleChange} placeholder="Enter phone number" required />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="monthlyFee">Monthly Fee</label>
+            <input id="monthlyFee" name="monthlyFee" value={form.monthlyFee} onChange={handleChange} placeholder="Enter amount" type="number" required />
+          </div>
+        </div>
+        
         <button type="submit">{editStudent ? 'Save Changes' : 'Enroll Student'}</button>
       </form>
       {message && <div className="success">{message}</div>}
