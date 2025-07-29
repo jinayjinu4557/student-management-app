@@ -994,7 +994,7 @@ h2 {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 2rem auto;
   padding: 40px;
   background: var(--card-bg);
@@ -1191,7 +1191,7 @@ button:disabled {
   -webkit-overflow-scrolling: touch;
   background: var(--card-bg);
   border-radius: 20px;
-  padding: 24px;
+  padding: 16px;
   position: relative;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
@@ -1222,11 +1222,13 @@ table {
 }
 
 th, td {
-  padding: 20px 24px;
+  padding: 12px 16px;
   text-align: left;
   border-bottom: 1px solid var(--border);
   color: var(--text-primary);
   font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  min-width: 120px;
 }
 
 th {
@@ -1379,6 +1381,36 @@ input[type="text"], input[type="number"], input[type="tel"], select {
     padding: 12px;
     max-width: 98vw;
     margin: 1rem auto;
+  }
+  
+  .table-container {
+    padding: 8px;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+  }
+  
+  th, td {
+    padding: 8px 6px;
+    font-size: 0.8rem;
+    min-width: 80px;
+  }
+  
+  /* Summary table specific mobile adjustments */
+  .status-badge, .fee-type-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+  }
+  
+  .enrollment-month {
+    font-size: 0.8rem;
+  }
+  
+  .applicable-months {
+    font-size: 0.8rem;
+  }
+  
+  .prorated-indicator, .left-indicator {
+    font-size: 0.65rem;
   }
   
   h2 {
