@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from './api';
 import Loader from './components/Loader';
+import './MobileResponsiveFix.css';
 
 const Summary = () => {
   const [summary, setSummary] = useState({ totalEarnings: 0, totalPending: 0, studentStats: [] });

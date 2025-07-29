@@ -1003,6 +1003,9 @@ h2 {
   border: 1px solid var(--border);
   position: relative;
   overflow: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .container::before {

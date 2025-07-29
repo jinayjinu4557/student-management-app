@@ -1,0 +1,14 @@
+/* Additional mobile responsive improvements */
+@media (max-width: 768px) {
+  .container {
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+  th, td {
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+  .table-container {
+    overflow-x: auto;
+  }
+}

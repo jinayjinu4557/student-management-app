@@ -59,19 +59,16 @@ router.put('/:studentId', async (req, res) => {
   }
 });
 
-// Soft delete (mark inactive) a student by studentId
 router.delete('/:studentId', async (req, res) => {
   if (!req.params.studentId || isNaN(Number(req.params.studentId))) {
     return res.status(400).json({ error: 'Invalid studentId' });
   }
   try {
-    const student = await Student.findOneAndUpdate(
-      { studentId: req.params.studentId },
-      { active: false },
-      { new: true }
+    const student = await Student.findOneAndDelete(
+      { studentId: req.params.studentId }
     );
     if (!student) return res.status(404).json({ error: 'Student not found' });
-    res.json({ message: 'Student marked as inactive', student });
+    res.json({ message: 'Student deleted successfully', student });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
