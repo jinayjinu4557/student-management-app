@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import api from './api';
+import Loader from './components/Loader';
 
 const Summary = () => {
   const [summary, setSummary] = useState({ totalEarnings: 0, totalPending: 0, studentStats: [] });
+  const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('');
 
-  const fetchSummary = () => {
-    api.get('/api/summary').then(res => setSummary(res.data));
+  const fetchSummary = async () => {
+    try {
+      setLoading(true);
+      setLoadingMessage('Loading summary data...');
+      const res = await api.get('/api/summary');
+      setSummary(res.data);
+    } catch (error) {
+      console.error('Error fetching summary:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -15,8 +27,16 @@ const Summary = () => {
   const handleDelete = async (studentId) => {
     console.log('Deleting studentId:', studentId);
     if (window.confirm('Are you sure you want to remove this student?')) {
-      await api.delete(`/api/students/${studentId}`);
-      fetchSummary();
+      try {
+        setLoading(true);
+        setLoadingMessage('Removing student...');
+        await api.delete(`/api/students/${studentId}`);
+        await fetchSummary();
+      } catch (error) {
+        console.error('Error deleting student:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -25,6 +45,7 @@ const Summary = () => {
 
   return (
     <div className="container">
+      {loading && <Loader message={loadingMessage} />}
       <h2>Academic Year Summary (June 2025 – April 2026)</h2>
       <div style={{ marginBottom: 8 }}>Total Earnings: <span style={{ fontWeight: 'bold' }}>₹{summary.totalEarnings}</span></div>
       <div style={{ marginBottom: 16 }}>Total Pending: <span style={{ fontWeight: 'bold' }}>₹{summary.totalPending}</span></div>
