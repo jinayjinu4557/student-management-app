@@ -12,6 +12,8 @@ const Summary = () => {
       setLoading(true);
       setLoadingMessage('Loading summary data...');
       const res = await api.get('/api/summary');
+      console.log('Summary data received:', res.data);
+      console.log('Student stats structure:', res.data.studentStats);
       setSummary(res.data);
     } catch (error) {
       console.error('Error fetching summary:', error);
@@ -25,19 +27,31 @@ const Summary = () => {
   }, []);
 
   const handleDelete = async (student) => {
-    console.log('Deleting student:', student);
-    const studentId = student._id || student.studentId || student.id;
-    console.log('Using studentId for deletion:', studentId);
+    console.log('Full student object:', student);
+    console.log('Available keys:', Object.keys(student));
+    
+    // The summary API returns studentId field (which contains the _id value)
+    const studentId = student.studentId;
+    console.log('Using studentId from summary:', studentId);
+    
+    if (!studentId) {
+      console.error('No studentId found in summary data:', student);
+      alert('Cannot delete student: Invalid student ID');
+      return;
+    }
     
     if (window.confirm(`Are you sure you want to remove ${student.name}?`)) {
       try {
         setLoading(true);
         setLoadingMessage('Removing student...');
-        await api.delete(`/api/students/${studentId}`);
+        console.log('Making DELETE request to:', `/api/students/${studentId}`);
+        const response = await api.delete(`/api/students/${studentId}`);
+        console.log('Delete response:', response);
         await fetchSummary();
       } catch (error) {
         console.error('Error deleting student:', error);
-        alert('Failed to delete student. Please try again.');
+        console.error('Error details:', error.response?.data);
+        alert(`Failed to delete student: ${error.response?.data?.message || error.message}`);
       } finally {
         setLoading(false);
       }
