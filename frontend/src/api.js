@@ -7,16 +7,17 @@ const baseURL = process.env.NODE_ENV === 'production'
 
 const api = axios.create({
   baseURL,
-  timeout: 10000,
+  timeout: 30000, // Increased timeout for slower connections
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor for logging
+// Request interceptor for logging and timing
 api.interceptors.request.use(
   (config) => {
-    console.log('API Request:', config.method?.toUpperCase(), config.url);
+    config.metadata = { startTime: new Date() };
+    console.log('🚀 API Request:', config.method?.toUpperCase(), config.url);
     return config;
   },
   (error) => {
@@ -24,15 +25,25 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor for error handling
+// Response interceptor for error handling and timing
 api.interceptors.response.use(
   (response) => {
+    const endTime = new Date();
+    const duration = endTime - response.config.metadata.startTime;
+    console.log(`✅ API Response: ${response.config.method?.toUpperCase()} ${response.config.url} - ${duration}ms`);
+    
+    if (duration > 3000) {
+      console.warn(`⚠️ Slow API response detected: ${duration}ms`);
+    }
+    
     return response;
   },
   (error) => {
-    console.error('API Error:', error.response?.status, error.response?.data);
+    const endTime = new Date();
+    const duration = error.config?.metadata ? endTime - error.config.metadata.startTime : 'unknown';
+    console.error(`❌ API Error: ${error.response?.status} ${error.config?.url} - ${duration}ms`, error.response?.data);
     return Promise.reject(error);
   }
 );
 
-export default api; 
+export default api;

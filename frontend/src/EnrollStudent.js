@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import api from './api';
+import Loader from './components/Loader';
 
 const EnrollStudent = ({ editStudent, onSave }) => {
   const [form, setForm] = useState(editStudent || { name: '', parentNumber: '', class: '', monthlyFee: '' });
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -12,6 +14,7 @@ const EnrollStudent = ({ editStudent, onSave }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       if (editStudent && editStudent._id) {
         await api.put(`/api/students/${editStudent._id}`, { ...form, monthlyFee: Number(form.monthlyFee) });
         setMessage('Student updated successfully!');
@@ -23,11 +26,14 @@ const EnrollStudent = ({ editStudent, onSave }) => {
       }
     } catch (err) {
       setMessage('Error enrolling/updating student.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="container enroll-container">
+      {loading && <Loader message={editStudent ? "Updating student..." : "Enrolling student..."} />}
       <h2>{editStudent ? 'Edit Student' : 'Enroll Student'}</h2>
       <form onSubmit={handleSubmit} className="enroll-form">
         {editStudent && editStudent._id && (

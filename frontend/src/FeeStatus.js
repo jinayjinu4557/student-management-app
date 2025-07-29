@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from './api';
+import Loader from './components/Loader';
 
 const months = [
   'June 2025', 'July 2025', 'August 2025', 'September 2025', 'October 2025',
@@ -11,28 +12,47 @@ const FeeStatus = () => {
   const [payments, setPayments] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(months[0]);
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('');
 
   useEffect(() => {
     fetchData();
   }, [selectedMonth]);
 
   const fetchData = async () => {
-    const studentsRes = await api.get('/api/students');
-    const paymentsRes = await api.get('/api/fees?month=' + encodeURIComponent(selectedMonth));
-    setStudents(studentsRes.data);
-    setPayments(paymentsRes.data);
+    try {
+      setLoading(true);
+      setLoadingMessage('Loading fee data...');
+      const studentsRes = await api.get('/api/students');
+      const paymentsRes = await api.get('/api/fees?month=' + encodeURIComponent(selectedMonth));
+      setStudents(studentsRes.data);
+      setPayments(paymentsRes.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleStatusChange = async (studentId, status) => {
-    const student = students.find(s => s._id === studentId);
-    await api.post('/api/fees', {
-      studentId,
-      month: selectedMonth,
-      status,
-      amountPaid: status === 'Paid' ? student.monthlyFee : 0
-    });
-    setMessage('Status updated!');
-    fetchData();
+    try {
+      setLoading(true);
+      setLoadingMessage(`Marking as ${status.toLowerCase()}...`);
+      const student = students.find(s => s._id === studentId);
+      await api.post('/api/fees', {
+        studentId,
+        month: selectedMonth,
+        status,
+        amountPaid: status === 'Paid' ? student.monthlyFee : 0
+      });
+      setMessage('Status updated!');
+      await fetchData();
+    } catch (error) {
+      console.error('Error updating status:', error);
+      setMessage('Error updating status!');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getStatus = (studentId) => {
@@ -47,6 +67,7 @@ const FeeStatus = () => {
 
   return (
     <div className="container">
+      {loading && <Loader message={loadingMessage} />}
       <h2>Monthly Fee Tracker</h2>
       <div style={{ marginBottom: 16 }}>
         <select value={selectedMonth} onChange={e => setSelectedMonth(e.target.value)}>

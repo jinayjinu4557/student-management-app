@@ -1,25 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import api from './api';
+import Loader from './components/Loader';
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
   const [filter, setFilter] = useState('');
   const [editId, setEditId] = useState(null);
   const [editForm, setEditForm] = useState({ name: '', class: '', parentNumber: '', monthlyFee: '' });
+  const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('');
 
   useEffect(() => {
     fetchStudents();
   }, []);
 
   const fetchStudents = async () => {
-    const res = await api.get('/api/students');
-    setStudents(res.data);
+    try {
+      setLoading(true);
+      setLoadingMessage('Loading students...');
+      const res = await api.get('/api/students');
+      setStudents(res.data);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to remove this student?')) {
-      await api.delete(`/api/students/${id}`);
-      fetchStudents();
+      try {
+        setLoading(true);
+        setLoadingMessage('Removing student...');
+        await api.delete(`/api/students/${id}`);
+        await fetchStudents();
+      } catch (error) {
+        console.error('Error deleting student:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -38,12 +57,20 @@ const StudentList = () => {
   };
 
   const handleEditSave = async (id) => {
-    await api.put(`/api/students/${id}`, {
-      ...editForm,
-      monthlyFee: Number(editForm.monthlyFee)
-    });
-    setEditId(null);
-    fetchStudents();
+    try {
+      setLoading(true);
+      setLoadingMessage('Saving changes...');
+      await api.put(`/api/students/${id}`, {
+        ...editForm,
+        monthlyFee: Number(editForm.monthlyFee)
+      });
+      setEditId(null);
+      await fetchStudents();
+    } catch (error) {
+      console.error('Error updating student:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const filtered = students.filter(s =>
@@ -54,6 +81,7 @@ const StudentList = () => {
 
   return (
     <div className="container">
+      {loading && <Loader message={loadingMessage} />}
       <h2>Student List</h2>
       <input
         type="text"
