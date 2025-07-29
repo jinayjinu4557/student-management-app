@@ -116,40 +116,7 @@ body::before {
               radial-gradient(circle at 40% 80%, rgba(245, 158, 11, 0.02) 0%, transparent 50%);
 }
 
-/* Hero Navigation Overlay */
-.hero-nav {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(30, 41, 59, 0.85);
-  backdrop-filter: blur(20px);
-  box-shadow: var(--shadow), 0 0 0 1px rgba(99, 102, 241, 0.3);
-  border-radius: 20px;
-  max-width: 1000px;
-  width: 95%;
-  min-height: 80px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 32px;
-  z-index: 100;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-[data-theme="light"] .hero-nav {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: var(--shadow), 0 0 0 1px rgba(99, 102, 241, 0.2);
-}
-
-.hero-nav:hover {
-  box-shadow: var(--shadow-lg), var(--glow);
-  transform: translateX(-50%) translateY(-2px);
-}
-
-/* Legacy nav styles for backward compatibility */
+/* Navigation Styles */
 nav {
   background: rgba(30, 41, 59, 0.9);
   backdrop-filter: blur(20px);
@@ -396,7 +363,7 @@ nav button.active {
 }
 
 .hero {
-  height: 500px;
+  height: 400px;
   background: var(--gradient-primary);
   display: flex;
   align-items: center;
@@ -405,7 +372,7 @@ nav button.active {
   overflow: hidden;
   border-radius: 0 0 40px 40px;
   box-shadow: var(--shadow-lg);
-  margin-bottom: 40px;
+  margin-bottom: 60px;
 }
 
 .hero::before {
@@ -923,32 +890,26 @@ input[type="text"], input[type="number"], input[type="tel"], select {
     text-align: center;
   }
   
-  /* Hero Navigation Mobile */
-  .hero-nav {
+  .hero {
+    height: 180px;
+  }
+  
+  nav {
     flex-wrap: wrap;
     gap: 8px;
     padding: 16px 20px;
-    width: 98%;
-    top: 10px;
+    margin: -40px auto 30px auto;
   }
 
-  .hero-nav button {
+  nav button {
     padding: 8px 12px;
     font-size: 0.85rem;
   }
 
-  .hero-nav .nav-logo {
+  .nav-logo {
     flex: 1 1 100%;
     margin-bottom: 12px;
     justify-content: center;
-  }
-  
-  .hero {
-    height: 350px;
-  }
-  
-  .hero-text {
-    margin-top: 120px; /* Account for overlay nav */
   }
   
   .hero-text h1 {
