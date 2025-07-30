@@ -6,6 +6,20 @@ const studentSchema = new mongoose.Schema({
   parentNumber: { type: String, required: true },
   class: { type: String, required: true },
   monthlyFee: { type: Number, required: true },
+  yearlyFee: { type: Number },
+  feeType: { 
+    type: String, 
+    enum: ['monthly', 'yearly'],
+    default: 'monthly'
+  },
+  installments: {
+    type: Number,
+    default: 1
+  },
+  endMonth: {
+    type: String,
+    default: 'April 2026'
+  },
   enrolledAt: { type: Date, default: Date.now },
   enrollmentMonth: { 
     type: String, 
@@ -18,7 +32,8 @@ const studentSchema = new mongoose.Schema({
     default: 'Active'
   },
   leftAt: { type: Date }, 
-  active: { type: Boolean, default: true } 
+  active: { type: Boolean, default: true },
+  comment: { type: String }
 });
 
-module.exports = mongoose.model('Student', studentSchema); 
+module.exports = mongoose.model('Student', studentSchema);

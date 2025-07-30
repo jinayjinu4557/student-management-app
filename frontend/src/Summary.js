@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import api from './api';
 import Loader from './components/Loader';
 import './MobileResponsiveFix.css';
+import './FeeStatus.css'; // Import the CSS for status badges
 import { useDataRefresh } from './contexts/DataRefreshContext';
 
 const Summary = () => {
   const [summary, setSummary] = useState({ totalEarnings: 0, totalPending: 0, studentStats: [] });
+  const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  const fetchSummary = async () => {
+  const fetchSummary = useCallback(async () => {
     try {
       setLoading(true);
       setLoadingMessage('Loading summary data...');
       const res = await api.get('/api/summary');
+      const paymentsRes = await api.get('/api/fees');
+      setPayments(paymentsRes.data);
       console.log('Summary API Response:', res.data);
       console.log('Student stats array:', res.data.studentStats);
       
@@ -32,17 +36,27 @@ const Summary = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchSummary();
-  }, []);
+    
+    // Set up an interval to refresh the summary data every 30 seconds
+    const intervalId = setInterval(() => {
+      fetchSummary();
+    }, 30000);
+    
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [fetchSummary]);
 
   const { refreshFlag } = useDataRefresh();
 
   useEffect(() => {
     fetchSummary();
-  }, [refreshFlag]);
+  }, [refreshFlag, fetchSummary]);
+
+  // Functions were moved below
 
   const handleDelete = async (student) => {
     console.log('=== DELETE OPERATION DEBUG ===');
@@ -148,6 +162,8 @@ const Summary = () => {
   const handleNextPage = () => {
     setCurrentPage(prev => Math.min(prev + 1, totalPages));
   };
+  
+  // Pagination functions and other utility functions go here
 
   return (
     <div className="container">
@@ -186,8 +202,8 @@ const Summary = () => {
                   </span>
                 </td>
                 <td data-label="Fee Type">
-                  <span className={`fee-type-badge ${stat.isClass10 ? 'part-payment' : 'monthly'}`}>
-                    {stat.isClass10 ? 'Part Payment' : 'Monthly'}
+                  <span className={`fee-type-badge ${stat.isClass10 || stat.feeType === 'yearly' ? 'yearly' : 'monthly'}`}>
+                    {stat.isClass10 || stat.feeType === 'yearly' ? 'Yearly' : 'Monthly'}
                   </span>
                 </td>
                 <td data-label="Applicable Months">
@@ -249,4 +265,4 @@ const Summary = () => {
   );
 };
 
-export default Summary; 
+export default Summary;

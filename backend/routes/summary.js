@@ -80,19 +80,28 @@ router.get('/', async (req, res) => {
       const isClass10 = isClass10Student(student.class);
       
       // Calculate fees based on student type
-      if (isClass10) {
-        // Class 10: Part payment system (not monthly)
+      if (isClass10 || student.feeType === 'yearly') {
+        // Yearly fee students (Class 10 or explicitly set as yearly)
         // Check if there's any payment for this student
-        const studentPayments = payments.filter(p => p.studentId.toString() === student._id.toString());
-        const totalPaid = studentPayments.reduce((sum, payment) => {
+        const currentStudentPayments = payments.filter(p => p.studentId.toString() === student._id.toString());
+        const totalPaid = currentStudentPayments.reduce((sum, payment) => {
           if (payment.status === 'Paid') {
             return sum + payment.amountPaid;
           }
           return sum;
         }, 0);
         
-        // For class 10, calculate total fee as monthly fee * applicable months
-        const totalExpectedFee = student.monthlyFee * applicableMonths.length;
+        // Calculate total expected fee based on yearly fee or monthly fee * applicable months
+        let totalExpectedFee;
+        if (student.yearlyFee && student.yearlyFee > 0) {
+          // Use the explicitly set yearly fee
+          totalExpectedFee = student.yearlyFee;
+        } else {
+          // Calculate based on monthly fee * applicable months
+          totalExpectedFee = student.monthlyFee * applicableMonths.length;
+        }
+        
+        // Use the totalPaid calculated from studentPayments
         
         paid = totalPaid;
         pending = Math.max(0, totalExpectedFee - totalPaid);
@@ -132,4 +141,4 @@ router.get('/', async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

@@ -84,7 +84,10 @@ function App() {
               <button className="modal-close" onClick={() => setShowEnrollModal(false)}>×</button>
             </div>
             <div className="modal-body">
-              <EnrollStudent onSuccess={() => setShowEnrollModal(false)} />
+              <EnrollStudent onSuccess={() => {
+                setShowEnrollModal(false);
+                setActiveTab('students'); // Switch to students tab after adding a student
+              }} />
             </div>
           </div>
         </div>
