@@ -1,0 +1,284 @@
+/* Summary Component Styles */
+
+.page-header {
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+}
+
+.page-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.page-header p {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+}
+
+/* Message Styles */
+.message {
+  padding: var(--spacing-md);
+  border-radius: 12px;
+  margin-bottom: var(--spacing-lg);
+  font-weight: 500;
+}
+
+.message.success {
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.message.error {
+  background: var(--error-light);
+  color: var(--error);
+  border: 1px solid var(--error);
+}
+
+/* Student Info Styling */
+.student-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.mobile-info {
+  display: none;
+  gap: var(--spacing-sm);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.mobile-class {
+  background: var(--info-light);
+  color: var(--info);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.mobile-status {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Fee Info Styling */
+.fee-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.applicable-months {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Balance Styling */
+.balance-positive {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.balance-negative {
+  color: var(--error);
+  font-weight: 600;
+}
+
+/* Error State */
+.error-state {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--text-secondary);
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-lg);
+  opacity: 0.5;
+}
+
+.error-state h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.error-state p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--text-secondary);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-lg);
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.empty-state p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Applicable Months Display */
+.applicable-months-display {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.3;
+  max-width: 250px;
+  min-width: 180px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+/* Utility Classes */
+.hide-mobile {
+  display: table-cell;
+}
+
+.hide-desktop {
+  display: none;
+}
+
+/* Mobile Overflow Prevention for Summary */
+@media (max-width: 480px) {
+  .page-container {
+    max-width: 100vw;
+    overflow-x: hidden;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  .table-section {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  .section-header h3 {
+    font-size: 1.2rem;
+    word-wrap: break-word;
+  }
+  
+  .section-header p {
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+}
+
+/* Table Column Sizing */
+.table-container table {
+  table-layout: auto;
+  width: 100%;
+  min-width: 900px;
+}
+
+.table-container th:nth-child(4), 
+.table-container td:nth-child(4) {
+  min-width: 200px;
+  width: 200px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .page-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .page-header p {
+    font-size: 1rem;
+  }
+  
+  .hide-mobile {
+    display: none;
+  }
+  
+  .hide-desktop {
+    display: flex;
+  }
+  
+  .mobile-info {
+    display: flex;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+  
+  .metric-card {
+    padding: var(--spacing-md);
+  }
+  
+  .metric-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+  
+  .metric-value {
+    font-size: 1.25rem;
+  }
+  
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+  
+  .page-header {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .metric-card {
+    padding: var(--spacing-sm);
+  }
+  
+  .metric-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+  
+  .metric-value {
+    font-size: 1.125rem;
+  }
+  
+  .error-state, .empty-state {
+    padding: var(--spacing-lg);
+  }
+  
+  .error-icon, .empty-icon {
+    font-size: 3rem;
+  }
+  
+  .error-state h3, .empty-state h3 {
+    font-size: 1.25rem;
+  }
+} 

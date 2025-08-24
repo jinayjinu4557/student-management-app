@@ -56,7 +56,6 @@
   --nav-bg: rgba(255, 255, 255, 0.95);
   --modal-bg: white;
   --sidebar-bg: white;
-  --input-bg: white;
 }
 
 [data-theme="dark"] {
@@ -71,7 +70,6 @@
   --nav-bg: rgba(31, 41, 55, 0.95);
   --modal-bg: var(--gray-800);
   --sidebar-bg: var(--gray-800);
-  --input-bg: var(--gray-800);
 }
 
 * {
@@ -105,18 +103,15 @@ body {
   top: 0;
   z-index: 100;
   display: flex;
-  flex-direction: row !important;
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-lg);
   box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
-  flex-wrap: nowrap;
 }
 
 .nav-left {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: var(--spacing-md);
 }
@@ -172,10 +167,7 @@ body {
 
 .nav-center {
   display: flex;
-  flex-direction: row;
   gap: var(--spacing-sm);
-  align-items: center;
-  justify-content: center;
 }
 
 .nav-tab {
@@ -206,7 +198,6 @@ body {
 
 .nav-actions {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: var(--spacing-md);
 }
@@ -509,7 +500,7 @@ input, select {
   padding: var(--spacing-sm);
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: var(--input-bg);
+  background: var(--bg-secondary);
   color: var(--text-primary);
   font-size: 1rem;
   transition: all 0.3s ease;
@@ -833,136 +824,17 @@ tbody tr:nth-child(even):hover {
 
 /* Utility Classes */
 .desktop-only {
-  display: flex !important;
-  flex-direction: row !important;
+  display: block;
 }
 
-/* Force horizontal navbar on all screens except mobile */
-@media (min-width: 481px) {
-  .nav-center {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: var(--spacing-sm) !important;
-  }
-  
-  .desktop-only {
-    display: flex !important;
-    flex-direction: row !important;
-  }
-  
-  .mobile-menu-btn {
-    display: none !important;
-  }
-}
-
-/* Tablet responsive - keep horizontal navbar */
-@media (max-width: 768px) and (min-width: 641px) {
-  .main-nav {
-    padding: var(--spacing-md) var(--spacing-lg);
-  }
-  
-  .nav-center {
-    gap: var(--spacing-xs);
-    display: flex !important;
-    flex-direction: row !important;
-  }
-  
-  .nav-tab {
-    padding: var(--spacing-xs) var(--spacing-md);
-    font-size: 0.9rem;
-  }
-  
-  .new-student-btn {
-    padding: var(--spacing-xs) var(--spacing-md);
-    font-size: 0.9rem;
-  }
-  
-  .mobile-menu-btn {
-    display: none;
-  }
-}
-
-/* Small tablet responsive - still keep horizontal */
-@media (max-width: 640px) and (min-width: 481px) {
-  .main-nav {
-    padding: var(--spacing-sm) var(--spacing-md);
-  }
-  
-  .nav-center {
-    gap: 4px;
-    display: flex !important;
-    flex-direction: row !important;
-  }
-  
-  .nav-tab {
-    padding: 6px 12px;
-    font-size: 0.85rem;
-  }
-  
-  .new-student-btn {
-    padding: 6px 12px;
-    font-size: 0.85rem;
-  }
-  
-  .mobile-menu-btn {
-    display: none;
-  }
-}
-
-/* Mobile Overflow Prevention - Ultra Aggressive */
-@media (max-width: 480px) {
-  * {
-    max-width: 100vw !important;
-    overflow-wrap: break-word !important;
-    word-wrap: break-word !important;
-    box-sizing: border-box !important;
-  }
-  
-  html, body {
-    overflow-x: hidden !important;
-    max-width: 100vw !important;
-    width: 100vw !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  
-  .app {
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-    width: 100vw !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  
-  .main-content {
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-    width: 100vw !important;
-    padding: 4px !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
-  }
-  
-  /* Force all containers to fit */
-  .page-container, .container {
-    max-width: 100vw !important;
-    width: 100vw !important;
-    padding: 4px !important;
-    margin: 0 !important;
-    overflow-x: hidden !important;
-    box-sizing: border-box !important;
-  }
-}
-
-/* Mobile Responsive - only very small screens */
-@media (max-width: 480px) {
+/* Mobile Responsive */
+@media (max-width: 768px) {
   .mobile-menu-btn {
     display: block;
   }
   
   .desktop-only {
-    display: none !important;
+    display: none;
   }
   
   .sidebar-overlay {
@@ -974,7 +846,7 @@ tbody tr:nth-child(even):hover {
   }
   
   .nav-center {
-    display: none !important;
+    display: none;
   }
   
   .nav-actions {
@@ -998,7 +870,22 @@ tbody tr:nth-child(even):hover {
     max-height: calc(100vh - 2rem);
   }
   
-  /* Allow MobileResponsiveFix.css to handle table responsiveness */
+  /* Mobile Table Optimization */
+  .table-container {
+    margin: var(--spacing-sm) 0;
+    border-radius: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  table {
+    font-size: 0.8rem;
+    min-width: 500px; /* Smaller minimum width for mobile */
+  }
+  
+  th, td {
+    padding: var(--spacing-sm);
+  }
   
   /* Hide less important columns on mobile */
   .hide-mobile {

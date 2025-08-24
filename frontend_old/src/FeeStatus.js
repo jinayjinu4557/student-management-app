@@ -9,94 +9,28 @@ const months = [
   'October 2025', 'November 2025', 'December 2025', 'January 2026', 'February 2026', 'March 2026',
   'April 2026'];
 
-// Get current month in academic year format
-const getCurrentAcademicMonth = () => {
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
-  
-  // Map current date to academic year month
-  const monthMap = {
-    5: 'June 2025', 6: 'July 2025', 7: 'August 2025', 8: 'September 2025',
-    9: 'October 2025', 10: 'November 2025', 11: 'December 2025',
-    0: 'January 2026', 1: 'February 2026', 2: 'March 2026', 3: 'April 2026'
-  };
-  
-  return monthMap[currentMonth] || 'June 2025';
-};
-
-// Helper function to get applicable months for a student (same as backend)
-const getApplicableMonths = (student) => {
-  const enrollmentMonth = student.enrollmentMonth || 'June 2025';
-  const endMonth = student.endMonth;
-  const startIndex = months.indexOf(enrollmentMonth);
-  
-  if (startIndex === -1) {
-    return []; // Return empty if enrollment month not found
-  }
-  
-  let finalEndIndex;
-  
-  // If student has left, use the earlier of leftAt date or endMonth
-  if (student.status === 'Left' && student.leftAt) {
-    const leftDate = new Date(student.leftAt);
-    const leftMonth = leftDate.getMonth();
-    
-    // Map left month to academic year month
-    const monthMapping = {
-      5: 'June 2025', 6: 'July 2025', 7: 'August 2025', 8: 'September 2025',
-      9: 'October 2025', 10: 'November 2025', 11: 'December 2025',
-      0: 'January 2026', 1: 'February 2026', 2: 'March 2026', 3: 'April 2026'
-    };
-    
-    const leftMonthLabel = monthMapping[leftMonth];
-    const leftIndex = leftMonthLabel ? months.indexOf(leftMonthLabel) : -1;
-    const endMonthIndex = endMonth ? months.indexOf(endMonth) : -1;
-    
-    // Use the earlier of left date or end month
-    if (leftIndex !== -1 && endMonthIndex !== -1) {
-      finalEndIndex = Math.min(leftIndex, endMonthIndex);
-    } else if (leftIndex !== -1) {
-      finalEndIndex = leftIndex;
-    } else if (endMonthIndex !== -1) {
-      finalEndIndex = endMonthIndex;
-    } else {
-      return [enrollmentMonth];
-    }
-  } 
-  // For active students, use endMonth if provided, otherwise April
-  else {
-    if (endMonth) {
-      finalEndIndex = months.indexOf(endMonth);
-      if (finalEndIndex === -1) {
-        finalEndIndex = months.length - 1; // Default to April
-      }
-    } else {
-      finalEndIndex = months.length - 1; // Default to April
-    }
-  }
-  
-  // Ensure end index is not before start index
-  if (finalEndIndex < startIndex) {
-    return [enrollmentMonth];
-  }
-  
-  return months.slice(startIndex, finalEndIndex + 1);
-};
-
-// Helper function to check if student should be shown in selected month
-const shouldShowStudentInMonth = (student, selectedMonth) => {
-  const applicableMonths = getApplicableMonths(student);
-  return applicableMonths.includes(selectedMonth);
-};
-
-// Helper function to calculate fees based on enrollment and left month capping
+// Helper function to calculate fees based on student's enrollment months
 const calculateFeeBasedOnMonths = (student, selectedMonth) => {
   if (!student || !student.monthlyFee) return 0;
   
-  // Check if student should be shown in this month
-  if (!shouldShowStudentInMonth(student, selectedMonth)) return 0;
-
+  // Get the index of the selected month in our months array
+  const selectedMonthIndex = months.indexOf(selectedMonth);
+  if (selectedMonthIndex === -1) return student.monthlyFee; // Default to full fee if month not found
+  
+  // Get the index of the student's enrollment month (if available)
+  const enrollmentMonth = student.enrollmentMonth || 'June 2025'; // Default to first month if not specified
+  const enrollmentMonthIndex = months.indexOf(enrollmentMonth);
+  
+  // Special case: If the selected month is the month immediately before enrollment,
+  // still show the fee (this handles cases like July students showing in June)
+  if (enrollmentMonthIndex === selectedMonthIndex + 1) {
+    return student.monthlyFee;
+  }
+  
+  // If student enrolled after the selected month, no fee is due
+  if (enrollmentMonthIndex > selectedMonthIndex) return 0;
+  
+  // Otherwise, return the full monthly fee
   return student.monthlyFee;
 };
 
@@ -105,12 +39,10 @@ const isClass10Student = (studentClass) => {
   return studentClass === '10' || studentClass === 'Class 10' || studentClass.toLowerCase().includes('10');
 };
 
-
-
 const FeeStatus = () => {
   const [students, setStudents] = useState([]);
   const [payments, setPayments] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState(getCurrentAcademicMonth());
+  const [selectedMonth, setSelectedMonth] = useState(months[0]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [loadingMessage, setLoadingMessage] = useState('Loading fee data...');
@@ -447,19 +379,16 @@ const FeeStatus = () => {
     setStudents([...students]);
   };
 
-  // Filter students based on view mode and month eligibility
+  // Filter students based on view mode
   const filteredStudents = students.filter(student => {
-    // First check if student should be shown in selected month
-    if (!shouldShowStudentInMonth(student, selectedMonth)) {
-      return false;
-    }
+    const isYearlyStudent = isClass10Student(student.class) || student.feeType === 'yearly';
     
     if (viewMode === 'monthly') {
-      // Show only monthly students (not class 10)
-      return !isClass10Student(student.class);
+      // Show only monthly students (not class 10 and not yearly fee type)
+      return !isYearlyStudent;
     } else if (viewMode === 'yearly') {
-      // Show only Class 10 students in yearly view
-      return isClass10Student(student.class);
+      // Show only yearly students (class 10 or yearly fee type)
+      return isYearlyStudent;
     }
     
     return false;
@@ -481,7 +410,7 @@ const FeeStatus = () => {
             <select 
               value={selectedMonth} 
               onChange={(e) => setSelectedMonth(e.target.value)}
-              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--input-bg)', color: 'var(--text-primary)' }}
+              style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--card-bg)', color: 'var(--text-primary)' }}
             >
               {months.map(month => (
                 <option key={month} value={month}>{month}</option>
@@ -494,7 +423,7 @@ const FeeStatus = () => {
         <select 
           value={viewMode} 
           onChange={(e) => setViewMode(e.target.value)}
-          style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--input-bg)', color: 'var(--text-primary)' }}
+          style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--card-bg)', color: 'var(--text-primary)' }}
         >
           <option value="monthly">Monthly</option>
           <option value="yearly">Yearly</option>
@@ -528,8 +457,9 @@ const FeeStatus = () => {
           </thead>
           <tbody>
             {filteredStudents.map(student => {
-              // In yearly view, only show Class 10 students
-              if (viewMode === 'yearly' && isClass10Student(student.class)) {
+              const isYearly = isClass10Student(student.class) || student.feeType === 'yearly';
+              
+              if (viewMode === 'yearly' && isYearly) {
                 // Show installments for yearly students
                 const installments = student.installments || 3;
                 return Array.from({ length: installments }, (_, i) => {
@@ -581,7 +511,7 @@ const FeeStatus = () => {
                     </tr>
                   );
                 });
-              } else if (viewMode === 'monthly' && !isClass10Student(student.class)) {
+              } else if (viewMode === 'monthly' && !isYearly) {
                 // Show monthly payments for regular students
                 const status = getStatus(student.studentId, selectedMonth);
                 const paymentId = getPaymentId(student.studentId, selectedMonth);
@@ -631,7 +561,7 @@ const FeeStatus = () => {
       
       {filteredStudents.length === 0 && (
         <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' }}>
-          {viewMode === 'monthly' ? 'No monthly fee students found for this month.' : 'No Class 10 students found for yearly fees.'}
+          {viewMode === 'monthly' ? 'No monthly fee students found.' : 'No yearly fee students found.'}
         </div>
       )}
     </div>

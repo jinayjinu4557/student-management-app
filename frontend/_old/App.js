@@ -7,23 +7,18 @@ import ThemeToggle from './components/ThemeToggle';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { DataRefreshProvider } from './contexts/DataRefreshContext';
 import './App.css';
-import './MobileResponsiveFix.css';
-/* Removed today changes: keep original imports only */
 
 function App() {
   const [activeTab, setActiveTab] = useState('summary');
   const [showEnrollModal, setShowEnrollModal] = useState(false);
-  const [editStudentData, setEditStudentData] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
-
   const closeSidebar = () => {
     setSidebarOpen(false);
   };
-
   const handleTabClick = (tab) => {
     setActiveTab(tab);
     closeSidebar(); // Close sidebar on mobile when tab is clicked
@@ -37,7 +32,6 @@ function App() {
           {sidebarOpen && (
             <div className="sidebar-overlay" onClick={closeSidebar}></div>
           )}
-
           {/* Mobile Sidebar */}
           <div className={`mobile-sidebar ${sidebarOpen ? 'open' : ''}`}>
             <div className="sidebar-header">
@@ -47,7 +41,7 @@ function App() {
               </div>
               <button className="sidebar-close" onClick={closeSidebar}>×</button>
             </div>
-            
+        
             <nav className="sidebar-nav">
               <button 
                 className={`sidebar-tab ${activeTab === 'summary' ? 'active' : ''}`}
@@ -68,7 +62,6 @@ function App() {
                 💰 Fee Status
               </button>
             </nav>
-            
             <div className="sidebar-actions">
               <button 
                 className="sidebar-new-student-btn"
@@ -80,89 +73,78 @@ function App() {
                 + New Student
               </button>
               <ThemeToggle />
-            </div>
-          </div>
-
+        </div>
+      </div>
+      
           {/* Main Navigation Bar */}
-          <nav className="main-nav">
+      <nav className="main-nav">
             <div className="nav-left">
               <button className="mobile-menu-btn" onClick={toggleSidebar}>
                 ☰
               </button>
-              <div className="nav-logo">
+        <div className="nav-logo">
                 <div className="logo-icon-small">🎓</div>
                 <span className="logo-text-small">Deepika Classes</span>
-              </div>
+        </div>
             </div>
-            
+        
             <div className="nav-center desktop-only">
-              <button 
+          <button 
                 className={`nav-tab ${activeTab === 'summary' ? 'active' : ''}`}
                 onClick={() => setActiveTab('summary')}
-              >
+          >
                 📊 Summary
-              </button>
-              <button 
+          </button>
+          <button 
                 className={`nav-tab ${activeTab === 'students' ? 'active' : ''}`}
                 onClick={() => setActiveTab('students')}
-              >
+          >
                 👥 Students
-              </button>
-              <button 
+          </button>
+          <button 
                 className={`nav-tab ${activeTab === 'fees' ? 'active' : ''}`}
                 onClick={() => setActiveTab('fees')}
-              >
+          >
                 💰 Fee Status
-              </button>
-            </div>
-            
-            <div className="nav-actions">
-              <button 
+          </button>
+        </div>
+        
+        <div className="nav-actions">
+          <button 
                 className="new-student-btn desktop-only"
-                onClick={() => setShowEnrollModal(true)}
-              >
+            onClick={() => setShowEnrollModal(true)} 
+          >
                 + New Student
-              </button>
-              <ThemeToggle />
-            </div>
-          </nav>
+          </button>
+          <ThemeToggle />
+        </div>
+      </nav>
 
           {/* Main Content */}
           <main className="main-content">
             <div className="content-wrapper">
               {activeTab === 'summary' && <Summary />}
-              {activeTab === 'students' && (
-                <StudentList 
-                  onEditStudent={(student) => {
-                    setEditStudentData(student);
-                    setShowEnrollModal(true);
-                  }}
-                />
-              )}
+              {activeTab === 'students' && <StudentList />}
               {activeTab === 'fees' && <FeeStatus />}
             </div>
           </main>
-
-          {/* Enroll Student Modal */}
-          {showEnrollModal && (
-            <div className="modal-overlay" onClick={() => setShowEnrollModal(false)}>
-              <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                  <h2>{editStudentData ? 'Edit Student' : 'Enroll New Student'}</h2>
-                  <button className="modal-close" onClick={() => setShowEnrollModal(false)}>×</button>
-                </div>
-                <div className="modal-body">
-                  <EnrollStudent 
-                    editStudent={editStudentData}
-                    onSuccess={() => {
-                      setShowEnrollModal(false);
-                      setEditStudentData(null);
-                    }}
-                  />
-                </div>
-              </div>
+      
+      {/* Enroll Student Modal */}
+      {showEnrollModal && (
+        <div className="modal-overlay" onClick={() => setShowEnrollModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Enroll New Student</h2>
+              <button className="modal-close" onClick={() => setShowEnrollModal(false)}>×</button>
             </div>
-          )}
+            <div className="modal-body">
+                  <EnrollStudent 
+                    onSuccess={() => setShowEnrollModal(false)}
+                  />
+            </div>
+          </div>
+        </div>
+      )}
         </div>
       </DataRefreshProvider>
     </ThemeProvider>

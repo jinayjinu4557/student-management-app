@@ -164,7 +164,7 @@ const Summary = () => {
                 <th>Student Name</th>
                 <th className="hide-mobile">Class</th>
                 <th className="hide-mobile">Status</th>
-                <th className="hide-mobile">Applicable Months</th>
+                <th className="hide-mobile">Enrollment Month</th>
                 <th>Fee Type</th>
                 <th className="hide-mobile">Amount Paid</th>
                 <th className="hide-mobile">Amount Pending</th>
@@ -178,24 +178,19 @@ const Summary = () => {
                 ) || [];
                 
                 const totalPaid = studentPayments.reduce((sum, p) => sum + (p.amountPaid || 0), 0);
-                const totalPending = student.pending || 0; // Backend already calculated this correctly
+                const totalPending = (student.pending || 0) - totalPaid;
                 
-                // Display actual applicable months
-                const applicableMonthsList = student.applicableMonthsList || [];
+                // Calculate applicable months display
                 let applicableMonthsDisplay = '';
-                
-                if (applicableMonthsList.length > 0) {
-                  if (applicableMonthsList.length <= 3) {
-                    // Show all months if 3 or fewer
-                    applicableMonthsDisplay = applicableMonthsList.join(', ');
-                  } else {
-                    // Show first and last month with count for more than 3
-                    const firstMonth = applicableMonthsList[0];
-                    const lastMonth = applicableMonthsList[applicableMonthsList.length - 1];
-                    applicableMonthsDisplay = `${firstMonth} → ${lastMonth} (${applicableMonthsList.length} months)`;
-                  }
+                if (student.class === '10' || student.class === 'Class 10') {
+                  // For Class 10, show enrollment to end month
+                  const enrollmentMonth = student.enrollmentMonth || 'June 2025';
+                  const endMonth = student.endMonth || 'March 2026';
+                  applicableMonthsDisplay = `${enrollmentMonth} - ${endMonth}`;
                 } else {
-                  applicableMonthsDisplay = 'No months';
+                  // For other classes, show X months
+                  const months = student.applicableMonths || 0;
+                  applicableMonthsDisplay = `${months} months`;
                 }
 
                 return (
@@ -215,18 +210,16 @@ const Summary = () => {
                         {student.status}
                       </span>
                     </td>
-                    <td data-label="Applicable Months" className="hide-mobile">
-                      <div className="applicable-months-display">
-                        {applicableMonthsDisplay}
-                      </div>
+                    <td data-label="Enrollment Month" className="hide-mobile">
+                      {student.enrollmentMonth || 'N/A'}
                     </td>
                     <td data-label="Fee Type">
                       <div className="fee-info">
                         <span className={`fee-type-badge ${student.feeType || 'monthly'}`}>
-                          {student.feeType === 'yearly' ? 'Yearly' : 'Monthly'}
+                          {student.feeType || 'Monthly'}
                         </span>
                         <div className="applicable-months hide-desktop">
-                          <small>Months: {applicableMonthsDisplay}</small>
+                          {applicableMonthsDisplay}
                         </div>
                       </div>
                     </td>

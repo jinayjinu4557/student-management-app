@@ -44,8 +44,7 @@ const EnrollStudent = ({ editStudent, onSave, onSuccess }) => {
       setForm(prev => ({
         ...prev,
         feeType: 'yearly',
-        installments: 3,
-        endMonth: 'March 2026' // Class 10 ends in March, not April
+        installments: 3
       }));
     } else {
       setShowYearlyFee(false);

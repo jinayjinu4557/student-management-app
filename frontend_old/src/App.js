@@ -7,13 +7,10 @@ import ThemeToggle from './components/ThemeToggle';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { DataRefreshProvider } from './contexts/DataRefreshContext';
 import './App.css';
-import './MobileResponsiveFix.css';
-/* Removed today changes: keep original imports only */
 
 function App() {
   const [activeTab, setActiveTab] = useState('summary');
   const [showEnrollModal, setShowEnrollModal] = useState(false);
-  const [editStudentData, setEditStudentData] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -131,14 +128,7 @@ function App() {
           <main className="main-content">
             <div className="content-wrapper">
               {activeTab === 'summary' && <Summary />}
-              {activeTab === 'students' && (
-                <StudentList 
-                  onEditStudent={(student) => {
-                    setEditStudentData(student);
-                    setShowEnrollModal(true);
-                  }}
-                />
-              )}
+              {activeTab === 'students' && <StudentList />}
               {activeTab === 'fees' && <FeeStatus />}
             </div>
           </main>
@@ -148,16 +138,12 @@ function App() {
             <div className="modal-overlay" onClick={() => setShowEnrollModal(false)}>
               <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
-                  <h2>{editStudentData ? 'Edit Student' : 'Enroll New Student'}</h2>
+                  <h2>Enroll New Student</h2>
                   <button className="modal-close" onClick={() => setShowEnrollModal(false)}>×</button>
                 </div>
                 <div className="modal-body">
                   <EnrollStudent 
-                    editStudent={editStudentData}
-                    onSuccess={() => {
-                      setShowEnrollModal(false);
-                      setEditStudentData(null);
-                    }}
+                    onSuccess={() => setShowEnrollModal(false)}
                   />
                 </div>
               </div>

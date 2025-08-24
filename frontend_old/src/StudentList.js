@@ -4,7 +4,7 @@ import Loader from './components/Loader';
 import { useDataRefresh } from './contexts/DataRefreshContext';
 import './StudentList.css';
 
-const StudentList = ({ onEditStudent }) => {
+const StudentList = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
@@ -54,9 +54,8 @@ const StudentList = ({ onEditStudent }) => {
   };
 
   const handleEdit = (student) => {
-    if (onEditStudent) {
-      onEditStudent(student);
-    }
+    // This will be handled by the parent component
+    console.log('Edit student:', student);
   };
 
   const filteredStudents = students.filter(student => {

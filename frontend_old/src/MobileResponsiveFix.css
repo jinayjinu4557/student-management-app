@@ -1,0 +1,254 @@
+/* Additional mobile responsive improvements */
+@media (max-width: 768px) {
+  .container {
+    word-wrap: break-word;
+    word-break: break-word;
+    padding: 10px;
+    margin: 0.5rem auto;
+  }
+  th, td {
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+  .table-container {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 80vh; /* Limit height and enable vertical scrolling */
+    padding-bottom: 24px; /* Add extra padding at bottom for better scrolling */
+  }
+  /* Ensure last row is fully visible */
+  tr:last-child {
+    margin-bottom: 24px;
+  }
+  
+  /* Make all tables responsive on mobile */
+  table {
+    display: block;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+  }
+  
+  thead {
+    display: none;
+  }
+  
+  tbody {
+    display: block;
+    width: 100%;
+  }
+  
+  tr {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    background-color: var(--card-bg);
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-light);
+    text-align: right;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 40px;
+    align-items: center;
+  }
+  
+  td:last-child {
+    border-bottom: none;
+  }
+  
+  td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    text-align: left;
+    margin-right: 10px;
+    flex-shrink: 0;
+    max-width: 40%;
+  }
+  
+  /* Ensure badges display properly in mobile view */
+  td .status-badge,
+  td .fee-type-badge,
+  td .enrollment-month,
+  td .installment-badge {
+    display: inline-block;
+    white-space: nowrap;
+    margin-bottom: 5px;
+  }
+  
+  /* Yearly fee display improvements */
+  td[data-label="Installment"] .installment-info-simple {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    width: 100%;
+    text-align: left;
+  }
+  
+  td[data-label="Yearly Fee"],
+  td[data-label="Monthly Fee"] {
+    font-weight: bold;
+  }
+  
+  .yearly-fee-label {
+    display: block;
+    margin-top: 5px;
+  }
+  
+  /* Fix for tables with nested content */
+  td > div {
+    text-align: right;
+    max-width: 60%;
+    word-break: break-word;
+  }
+  
+  /* Specific styling for yearly fee view */
+  tr.yearly-fee-row td {
+    border-bottom: 1px solid var(--border-light);
+    padding: 10px 8px;
+  }
+  
+  tr.yearly-fee-row:last-child td {
+    border-bottom: none;
+  }
+  
+  /* Ensure proper spacing in yearly fee rows */
+  tr.yearly-fee-row td[data-label="Installment"] {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  
+  /* Improve installment display */
+  .installment-info-simple .installment-badge {
+    display: inline-block;
+    margin-bottom: 5px;
+    width: 100%;
+  }
+  
+  .installment-info-simple .installment-date {
+    display: block;
+    margin-bottom: 5px;
+    width: 100%;
+  }
+  
+  .installment-info-simple .installment-amount {
+    display: block;
+    font-weight: bold;
+    width: 100%;
+  }
+}
+
+/* These styles are now in EnrollStudent.css */
+/* Keeping this comment for reference */
+
+@media (max-width: 768px) {
+  .enroll-container {
+    width: 100%;
+    padding: 12px;
+  }
+  
+  .modal-content {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* Modal body styles are now in App.css */
+  /* Keeping this comment for reference */
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .primary-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+  
+  /* Pagination controls for mobile */
+  .pagination-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .pagination-controls button {
+    width: 100%;
+    max-width: 200px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  /* Fix for action buttons on mobile */
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .action-buttons button {
+    width: 100%;
+    padding: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Additional mobile styles for filter inputs */
+@media (max-width: 768px) {
+  input[type="text"],
+  input[type="number"],
+  input[type="tel"],
+  select {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  
+  /* Fix for month selector in FeeStatus */
+  .month-selector {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .month-selector select {
+    width: 100%;
+  }
+  
+  /* Fix for view mode selector in FeeStatus */
+  .fee-type-selector {
+    width: 100%;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+}
